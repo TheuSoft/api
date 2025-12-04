@@ -1,0 +1,14 @@
+{
+    "name": "matheus/api-feedback",
+    "description": "API RESTful com autenticação JWT",
+    "type": "project",
+    "require": {
+        "php": "^8.0",
+        "firebase/php-jwt": "^6.11"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "platform-check": false
+    }
+}
