@@ -93,7 +93,7 @@ class FeedbackDAO extends MysqlFactory implements IFeedbackDAO
         ];
 
         $this->banco->executar($sql, $param);
-        return "Feedback atualizado com sucesso";
+        return true;
     }
 
     public function deletar($id)

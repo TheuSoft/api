@@ -29,12 +29,12 @@ class JwtAuth
         try {
             // Verificar se o header Authorization existe
             if (! isset($_SERVER['HTTP_AUTHORIZATION'])) {
-                http_response_code(406);
-                echo json_encode([
-                    'erro'     => 'token_nao_fornecido',
-                    'mensagem' => 'Token não fornecido. Inclua o token no header Authorization (Bearer token).',
-                ]);
-                return false;
+                http_response_code(401);
+                $retorno       = new Retorno();
+                $retorno->erro = "Token nao fornecido. Inclua o token no header Authorization (Bearer token).";
+                header("Content-Type: application/json; charset=utf-8");
+                echo json_encode($retorno);
+                exit;
             }
 
             // Remover "Bearer " do token
@@ -47,12 +47,12 @@ class JwtAuth
             // Verificar se o token expirou
             $hora = time();
             if ($hora > $decodificar->exp) {
-                http_response_code(408);
-                echo json_encode([
-                    'erro'     => 'token_expirado',
-                    'mensagem' => 'Seu token expirou. Faça login novamente para obter um novo token.',
-                ]);
-                return false;
+                http_response_code(401);
+                $retorno       = new Retorno();
+                $retorno->erro = "Seu token expirou. Faca login novamente para obter um novo token.";
+                header("Content-Type: application/json; charset=utf-8");
+                echo json_encode($retorno);
+                exit;
             }
 
             // Token válido - retorna os dados decodificados
@@ -61,12 +61,12 @@ class JwtAuth
         } catch (Exception $e) {
             // Qualquer erro na decodificação do token
             http_response_code(401);
-            echo json_encode([
-                'erro'     => 'token_invalido',
-                'mensagem' => 'Token inválido ou malformado. Verifique se o token está correto.',
-                'detalhes' => $e->getMessage(),
-            ]);
-            return false;
+            $retorno        = new Retorno();
+            $retorno->erro  = "Token invalido ou malformado. Verifique se o token esta correto.";
+            $retorno->dados = ["detalhes" => $e->getMessage()];
+            header("Content-Type: application/json; charset=utf-8");
+            echo json_encode($retorno);
+            exit;
         }
     }
 }

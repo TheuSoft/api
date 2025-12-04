@@ -51,7 +51,11 @@ class Acao
                     }
 
                     http_response_code(400);
-                    return ["erro" => "Parâmetro obrigatório ausente: {$name}"];
+                    $retorno       = new Retorno();
+                    $retorno->erro = "Parametro obrigatorio ausente: {$name}";
+                    header("Content-Type: application/json; charset=utf-8");
+                    echo json_encode($retorno);
+                    exit;
                 }
                 return $reflectMetodo->invokeArgs(new $end->classe(), $para);
             }
@@ -60,7 +64,11 @@ class Acao
         }
 
         http_response_code(404);
-        return ["erro" => "Rota não encontrada"];
+        $retorno       = new Retorno();
+        $retorno->erro = "Rota nao encontrada";
+        header("Content-Type: application/json; charset=utf-8");
+        echo json_encode($retorno);
+        exit;
     }
 
     private function endpointMetodo()
@@ -88,11 +96,29 @@ class Acao
     private function getInput()
     {
         $input = file_get_contents("php://input");
-        return $input ? json_decode($input, true) : [];
+        if (! $input) {
+            return [];
+        }
+
+        $decoded = json_decode($input, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || ! is_array($decoded)) {
+            return [];
+        }
+
+        return $decoded;
     }
 
     public function getParam()
     {
-        return array_merge($this->getPost(), $this->getGet(), $this->getInput());
+        $post  = $this->getPost();
+        $get   = $this->getGet();
+        $input = $this->getInput();
+
+        return array_merge(
+            is_array($post) ? $post : [],
+            is_array($get) ? $get : [],
+            is_array($input) ? $input : []
+        );
     }
 }

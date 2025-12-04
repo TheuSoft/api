@@ -5,83 +5,33 @@ use service\UsuarioService;
 
 class Usuario
 {
-    private $service;
-
-    public function __construct()
-    {
-        $this->service = new UsuarioService();
-    }
-
     public function listar()
     {
-        return $this->service->listarUsuario();
-    }
-
-    public function buscar($id = null)
-    {
-        if ($id) {
-            return $this->service->listarId($id);
-        }
-        return ["erro" => "ID não fornecido"];
+        $usuario = new UsuarioService();
+        return $usuario->listarUsuario();
     }
 
     public function cadastrar($nome, $email, $senha)
     {
-        if (empty($nome) || empty($email) || empty($senha)) {
-            return ["erro" => "Nome, email e senha são obrigatórios"];
-        }
-
-        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return ["erro" => "Email inválido"];
-        }
-
-        $usuarioExistente = $this->service->buscarPorEmail($email);
-        if ($usuarioExistente) {
-            return ["erro" => "Email já cadastrado"];
-        }
-
-        $resultado = $this->service->cadastrarComSenha($nome, $email, $senha);
-        return ["mensagem" => $resultado];
+        $usuario = new UsuarioService();
+        return $usuario->cadastrarComSenha($nome, $email, $senha);
     }
 
-    public function inserir($nome, $email)
+    public function listarId($id)
     {
-        if (empty($nome) || empty($email)) {
-            return ["erro" => "Campos obrigatórios: nome, email"];
-        }
-
-        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return ["erro" => "Email inválido"];
-        }
-
-        $resultado = $this->service->inserir($nome, $email);
-        return ["mensagem" => $resultado];
+        $usuario = new UsuarioService();
+        return $usuario->listarId($id);
     }
 
-    public function alterar($id, $nome, $email)
+    public function alterar($id, $nome, $email, $senha = null)
     {
-        if (empty($id) || empty($nome) || empty($email)) {
-            return ["erro" => "Campos obrigatórios: id, nome, email"];
-        }
-
-        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return ["erro" => "Email inválido"];
-        }
-
-        $resultado = $this->service->alterar($id, $nome, $email);
-        return ["mensagem" => $resultado];
+        $usuario = new UsuarioService();
+        return $usuario->alterar($id, $nome, $email, $senha);
     }
 
     public function deletar($id)
     {
-        if (empty($id)) {
-            return ["erro" => "ID é obrigatório"];
-        }
-
-        $ok = $this->service->deletar($id);
-        if ($ok) {
-            return ["mensagem" => "Usuário deletado com sucesso"];
-        }
-        return ["erro" => "Registro não encontrado ou não excluído"];
+        $usuario = new UsuarioService();
+        return $usuario->deletar($id);
     }
 }

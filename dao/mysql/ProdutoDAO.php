@@ -44,7 +44,7 @@ class ProdutoDAO extends MysqlFactory implements IProdutoDAO
             ":id"        => $id,
         ];
         $retorno = $this->banco->executar($sql, $param);
-        return $retorno;
+        return true;
     }
 
     public function deletar($id)

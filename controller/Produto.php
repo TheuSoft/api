@@ -5,64 +5,33 @@ use service\ProdutoService;
 
 class Produto
 {
-    private $service;
-
-    public function __construct()
-    {
-        $this->service = new ProdutoService();
-    }
-
     public function listar()
     {
-        return $this->service->listarProduto();
+        $produto = new ProdutoService();
+        return $produto->listarProduto();
     }
 
-    public function buscar($id = null)
+    public function cadastrar($nome, $descricao, $preco)
     {
-        if (! $id) {
-            return ["erro" => "ID não fornecido"];
-        }
-
-        return $this->service->listarId($id);
-    }
-
-    public function inserir($nome, $descricao, $preco)
-    {
-        if (empty($nome) || empty($descricao) || $preco === null) {
-            return ["erro" => "Campos obrigatórios: nome, descricao, preco"];
-        }
-        $ok = $this->service->inserir($nome, $descricao, $preco);
-        if ($ok) {
-            return ["mensagem" => "Dados Salvo com Sucesso!"];
-        }
-
-        return ["erro" => "Falha ao inserir"];
+        $produto = new ProdutoService();
+        return $produto->inserir($nome, $descricao, $preco);
     }
 
     public function alterar($id, $nome, $descricao, $preco)
     {
-        if (empty($id) || empty($nome) || empty($descricao) || $preco === null) {
-            return ["erro" => "Campos obrigatórios: id, nome, descricao, preco"];
-        }
-        $ok = $this->service->alterar($id, $nome, $descricao, $preco);
-        if ($ok) {
-            return ["mensagem" => "Alterado com sucesso"];
-        }
+        $produto = new ProdutoService();
+        return $produto->alterar($id, $nome, $descricao, $preco);
+    }
 
-        return ["erro" => "Registro não alterado"];
+    public function listarId($id)
+    {
+        $produto = new ProdutoService();
+        return $produto->listarId($id);
     }
 
     public function deletar($id)
     {
-        if (empty($id)) {
-            return ["erro" => "ID é obrigatório"];
-        }
-
-        $ok = $this->service->deletar($id);
-        if ($ok) {
-            return ["mensagem" => "Excluído com sucesso"];
-        }
-
-        return ["erro" => "Registro não encontrado ou não excluído"];
+        $produto = new ProdutoService();
+        return $produto->deletar($id);
     }
 }

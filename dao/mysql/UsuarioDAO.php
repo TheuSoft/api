@@ -1,5 +1,4 @@
 <?php
-// filepath: c:\xampp\htdocs\api\dao\mysql\UsuarioDAO.php
 namespace dao\mysql;
 
 use dao\IUsuarioDAO;
@@ -53,11 +52,8 @@ class UsuarioDAO extends MysqlFactory implements IUsuarioDAO
             return null;
 
         } catch (\PDOException $e) {
-            echo json_encode([
-                'erro'     => 'Erro ao acessar o banco de dados.',
-                'detalhes' => $e->getMessage(),
-            ]);
-            exit;
+            // Lança exception para o Service tratar
+            throw new \Exception("Erro ao acessar o banco de dados: " . $e->getMessage());
         }
     }
 
@@ -85,7 +81,7 @@ class UsuarioDAO extends MysqlFactory implements IUsuarioDAO
             ":id"    => $id,
         ];
         $retorno = $this->banco->executar($sql, $param);
-        return $retorno;
+        return true;
     }
 
     public function deletar($id)
